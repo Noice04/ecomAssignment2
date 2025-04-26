@@ -11,10 +11,24 @@ require(dirname(__DIR__)."/resources/views/employees/employeeslist.php");
 
 class EmployeeController{
 
-    private Employee $employee;
+    private $employee;
+
+
+    public function validateEmployeeTitles() {
+        $employeeModel = new Employee();
+        $invalidTitles = $employeeModel->validateTitles();
+
+        if (empty($invalidTitles)) {
+            echo "All employee titles are valid.";
+        } else {
+            echo "Found invalid titles:<br>";
+            foreach ($invalidTitles as $emp) {
+                echo "Employee ID: {$emp['employeeID']} - Title: {$emp['title']}<br>";
+            }
+        }
+    }
 
     public function read(){
-
         $employee = new Employee();
         $data = $employee->read();
         

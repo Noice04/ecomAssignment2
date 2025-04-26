@@ -6,6 +6,7 @@ namespace views;
 OR we can use OOP and make it a class. 
 */
 use core\auth\MembershipProvider;
+
 class EmployeeList{
 
     
@@ -56,4 +57,4 @@ class EmployeeList{
         }
        // return $html;
     }
-}
+}  

@@ -2,35 +2,41 @@
 
 namespace controllers;
 
-use models\User;
-use views\UserList;
+use views\UserRegister;
+use models\UserModel; // Assuming this exists
+use helpers\InputSanitizer;
 
-require(dirname(__DIR__)."/models/user.php");
-require(dirname(__DIR__)."/resources/views/users/userslist.php");
+class UserController {
 
+    public function register() {
+        $view = new UserRegister();
 
-class UserController{
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = InputSanitizer::sanitize($_POST['username']);
+            $password = InputSanitizer::sanitize($_POST['password']);
+            $enabled2FA = isset($_POST['enabled2FA']) ? (int)$_POST['enabled2FA'] : 0;
+            $secret = InputSanitizer::sanitize($_POST['secret']);
 
-    private User $user;
+            $errors = [];
 
-    public function read(){
+            if (empty($username) || empty($password)) {
+                $errors[] = "Username and password are required.";
+            }
 
-        $user = new User();
-        $data = $user->read();
-        
-        (new UserList())->render($data);
+            if (empty($errors)) {
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Another option is to remove the echo from the view Just return HTML
-        // then the controller returns the view as the requested resource
-        // and it will be written to the response's body 
-        // If we used return in the view then we can return the data
-       //return  (new EmployeeList())->render($data);
+                $userModel = new UserModel();
+                $userModel->createUser($username, $hashedPassword, $enabled2FA, $secret);
+
+                header("Location: /app/logins");
+                exit();
+            } else {
+                $view->render($errors);
+            }
+
+        } else {
+            $view->render();
+        }
     }
 }
-
-/*TEST
-
-$employeeController = new EmployeeController();
-$employeeController->read();
-
-*/

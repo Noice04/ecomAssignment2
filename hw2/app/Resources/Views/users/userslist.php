@@ -2,59 +2,57 @@
 
 namespace views;
 
-/* The view can be written as HTML + PHP
-OR we can use OOP and make it a class. 
-*/
 use core\auth\MembershipProvider;
-class UserList{
 
-    
+class UserList {
 
-    public function render($data){
-/*
-    if(isset($_GET['logout'])){
-        session_start();
-        session_destroy();
-    }
+    public function render($data) {
+
+        if (isset($_GET['logout'])) {
+            session_start();
+            session_destroy();
+        }
 
         $membership = new MembershipProvider();
-    if ($membership->isLoggedIn()){
-*/
-       require("Resources\\Views\\templates\\header.php");
+        if ($membership->isLoggedIn()) {
 
-        $html = "
-        <table>
-            <thead>
-                <tr>
-                    <th>UserID</th>
-                    <th>Username</th>
-                    <th>Enabled 2FA</th>
-                    <th>Secret</th>
-                </tr>
-        </thead>";
+            require("Resources\\Views\\templates\\header.php");
 
-            foreach ($data as $users) {
+            $html = "
+            <h2>Users Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>2FA Enabled</th>
+                        <th>Secret</th>
+                    </tr>
+                </thead>
+                <tbody>";
+
+            foreach ($data as $user) {
                 $html .= "<tr>";
-                $html .= "<td>{$users["id"]}</td>";
-                $html .= "<td>{$users["username"]}</td>";
-                $html .= "<td>{$users["enabled2FA"]}</td>";
-                $html .= "<td>{$users["secret"]}</td>";
+                $html .= "<td>{$user['id']}</td>";
+                $html .= "<td>{$user['username']}</td>";
+                $html .= "<td>{$user['password']}</td>";
+                $html .= "<td>" . ($user['enabled2FA'] ? 'Yes' : 'No') . "</td>";
+                $html .= "<td>{$user['secret']}</td>";
                 $html .= "</tr>";
             }
-        $html .='</table>
+
+            $html .= "</tbody></table>
                 <br>
-                
-        ';
-//<a href="/app/employees?logout">Log Out</a> this is used to logout
-      
-        echo $html;  
+                <a href=\"/app/users?logout\">Log Out</a>
+            ";
 
-        require("Resources\\Views\\templates\\footer.php");
+            echo $html;
+
+            require("Resources\\Views\\templates\\footer.php");
+
+        } else {
+            header('Location: /app/logins');
         }
-        /*else{
-            header('location: /app/logins');
-         }
-            */
-       // return $html;
     }
-
+}
