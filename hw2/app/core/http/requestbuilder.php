@@ -58,7 +58,7 @@ class RequestBuilder{
         // to remove the last slash
         // Then we need to use explode to transform the value of $_GET['url'] into an array
     
-        return explode("/", trim($_GET["url"], "/") );
+        return explode("/", trim($_GET['url'], "/") );
     
     }
 

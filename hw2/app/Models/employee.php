@@ -89,6 +89,24 @@ class Employee{
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_CLASS, Employee::class);
     }
+    function validateTitles($dbConnection) {
+    $query = "SELECT employeeID, title FROM employees";
+    $stmt = $dbConnection->query($query);
+    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $invalidEmployees = [];
+
+    foreach ($employees as $employee) {
+        // Check if title contains only letters and spaces
+        if (!preg_match('/^[a-zA-Z\s]+$/', $employee['title'])) {
+            $invalidEmployees[] = $employee;
+        }
+    }
+
+    return $invalidEmployees;
+}
+
+
     
 }
 

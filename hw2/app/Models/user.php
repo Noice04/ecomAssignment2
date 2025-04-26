@@ -87,4 +87,15 @@ class User{
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_CLASS, User::class);
     }
+    
+    public function createUser($username, $password, $enabled2FA, $secret) {
+        
+        $query = "INSERT INTO users (username, password, enabled2FA, secret) VALUES (?, ?, ?, ?)";
+        $stmt = $this->dbConnection->prepare($query);
+        $stmt->bindParam([$username, $password, $enabled2FA, $secret]);
+        $stmt->execute();
+        echo "created successfully";
+    }
+
+    
 }
